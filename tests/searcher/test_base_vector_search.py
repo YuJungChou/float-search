@@ -1,4 +1,5 @@
 import logging
+import random
 import uuid
 
 from float_search.helper.vector import random_array
@@ -53,7 +54,7 @@ def test_base_operate_documents():
     fs_api.insert_documents(test_documents)
     assert fs_api.count_documents() == len(test_documents)
 
-    result = fs_api.search_documents(test_documents)
+    result = fs_api.search_documents(random.choice(test_documents)[vector_field])
     assert len(result) > 0
     assert (
         search_field in result[0]
