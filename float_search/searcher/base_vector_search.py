@@ -65,28 +65,13 @@ class BaseVectorSearch:
         raise NotImplementedError
 
 
-class BaseAsyncVectorSearch:
+class BaseAsyncVectorSearch(BaseVectorSearch):
     """Base Asynchronized Vector Search ABC."""
 
-    def __init__(
-        self,
-        *args,
-        search_field: Text = 'text',
-        metadata_field: Text = 'metadata',
-        vector_field: Text = 'vector',
-        similarity_field: Text = 'similarity',
-        **kwargs
-    ):
-        self.search_field = search_field
-        self.metadata_field = metadata_field
-        self.vector_field = vector_field
-        self.similarity_field = similarity_field
+    def __init__(self, *args, **kwargs):
+        super(BaseAsyncVectorSearch, self).__init__(*args, **kwargs)
 
-        self._project: Optional[Union[BaseModel, Dict[Text, Any]]] = None
-
-        self.args = args
-        self.kwargs = kwargs
-
+    # override
     async def create_project_if_not_exists(
         self, *args, **kwargs
     ) -> Union[BaseModel, Dict[Text, Any]]:
@@ -94,6 +79,7 @@ class BaseAsyncVectorSearch:
 
         raise NotImplementedError
 
+    # override
     async def get_project_or_none(
         self, *args, **kwargs
     ) -> Optional[Union[BaseModel, Dict[Text, Any]]]:
@@ -101,6 +87,7 @@ class BaseAsyncVectorSearch:
 
         raise NotImplementedError
 
+    # override
     async def insert_documents(
         self, documents: List, batch_size: int = 200, *args, **kwargs
     ) -> List:
@@ -108,6 +95,7 @@ class BaseAsyncVectorSearch:
 
         raise NotImplementedError
 
+    # override
     async def search_documents(
         self, query: List, size: int = 20, *args, **kwargs
     ) -> List:
@@ -115,12 +103,13 @@ class BaseAsyncVectorSearch:
 
         raise NotImplementedError
 
+    # override
     async def refresh_documents(self) -> List:
         """Refresh vectors."""
 
         raise NotImplementedError
 
-
+    # override
     async def count_documents(self) -> int:
         """Count documents."""
 
