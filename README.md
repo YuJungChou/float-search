@@ -48,8 +48,9 @@ Vector-Search API of databases.
 ## Basic Usages
 
 ## Roadmap
-* InMemoryVectorSearch
-* ElasticSevenVectorSearch
-* ElasticVectorSearch
-* OpensearchVectorSearch
-* PineconeVectorSearch
+- [x] InMemoryVectorSearch
+- [ ] Batch encoder.
+- [ ] ElasticSevenVectorSearch
+- [ ] ElasticVectorSearch
+- [ ] OpensearchVectorSearch
+- [ ] PineconeVectorSearch
