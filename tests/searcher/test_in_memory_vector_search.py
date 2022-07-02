@@ -97,3 +97,38 @@ def test_in_memory_vector_search_refresh_documents(
         and similarity_field in result[0]
     )
     assert round(result[0][similarity_field], 2) == 1.0
+
+
+def test_in_memory_vector_search_insert_documents_with_dynamic_encoding():
+
+    dims = 8
+    vectorizer = RandomVectorizer(dims=dims)
+    fs_api = InMemoryVectorSearch(
+        project_name='test_vector_search_api',
+        search_field=search_field,
+        metadata_field=metadata_field,
+        vector_field=vector_field,
+        similarity_field=similarity_field,
+        vectorizer=vectorizer,
+        dims=dims
+    )
+    fs_api.create_project_if_not_exists()
+
+    test_documents = get_test_documents(
+        dims=dims,
+        search_field=search_field,
+        metadata_field=metadata_field,
+        vector_field=vector_field,
+        with_vector=True
+    )
+    fs_api.insert_documents(test_documents)
+    assert fs_api.count_documents() == len(test_documents)
+
+    result = fs_api.search_documents(random.choice(test_documents)[vector_field])
+    assert len(result) > 0
+    assert (
+        search_field in result[0]
+        and metadata_field in result[0]
+        and vector_field in result[0]
+        and similarity_field in result[0]
+    )

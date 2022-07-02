@@ -7,6 +7,7 @@ from vector_search_api.searcher.base_vector_search import DummyTestVectorSearch
 logger = logging.getLogger('pytest')
 
 
+dims = 10
 search_field = 'test_text'
 metadata_field = 'test_metadata'
 vector_field = 'test_vector'
@@ -16,6 +17,7 @@ similarity_field = 'test_similarity'
 def test_base_project_create():
 
     fs_api = DummyTestVectorSearch(
+        dims=dims,
         project_name='test_vector_search_api',
         search_field=search_field,
         metadata_field=metadata_field,
@@ -30,6 +32,7 @@ def test_base_operate_documents():
 
     fs_api = DummyTestVectorSearch(
         project_name='test_vector_search_api',
+        dims=dims,
         search_field=search_field,
         metadata_field=metadata_field,
         vector_field=vector_field,
@@ -38,6 +41,7 @@ def test_base_operate_documents():
     fs_api.create_project_if_not_exists()
 
     test_documents = get_test_documents(
+        dims=dims,
         search_field=search_field,
         metadata_field=metadata_field,
         vector_field=vector_field
@@ -56,6 +60,7 @@ def test_base_operate_documents():
 
     new_documents = get_test_documents(
         num=213,
+        dims=dims,
         search_field=search_field,
         metadata_field=metadata_field,
         vector_field=vector_field

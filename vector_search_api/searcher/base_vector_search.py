@@ -1,7 +1,10 @@
-from typing import Any, Dict, List, Optional, Text, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Text, Tuple, Union
 
 import numpy as np
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from vector_search_api.vectorizer.base_vectorizer import BaseVectorizer
 
 
 class BaseVectorSearch:
@@ -10,21 +13,33 @@ class BaseVectorSearch:
     def __init__(
         self,
         *args,
+        dims: Union[Tuple, int],
         search_field: Text = 'text',
         metadata_field: Text = 'metadata',
         vector_field: Text = 'vector',
         similarity_field: Text = 'similarity',
+        vectorizer: Optional['BaseVectorizer'] = None,
         **kwargs
     ):
+        if isinstance(dims, int) is True:
+            dims = (dims, )
+        self.dims: Tuple = dims
+
         self.search_field = search_field
         self.metadata_field = metadata_field
         self.vector_field = vector_field
         self.similarity_field = similarity_field
+        self.vectorizer = vectorizer
 
         self._project: Optional[Union[BaseModel, Dict[Text, Any]]] = None
 
         self.args = args
         self.kwargs = kwargs
+
+        if self.vectorizer is not None and self.dims != self.vectorizer.dims:
+            raise ValueError(
+                f"The dimension is mismatched, {self.dims} v.s. {vectorizer.dims}."
+            )
 
     def create_project_if_not_exists(
         self, *args, **kwargs
@@ -41,7 +56,11 @@ class BaseVectorSearch:
         raise NotImplementedError
 
     def insert_documents(
-        self, documents: List, batch_size: int = 200, *args, **kwargs
+        self,
+        documents: List,
+        batch_size: int = 200,
+        apply_vectoring: bool = False,
+        **kwargs
     ) -> List:
         """Insert documents"""
 
@@ -89,7 +108,11 @@ class BaseAsyncVectorSearch(BaseVectorSearch):
 
     # override
     async def insert_documents(
-        self, documents: List, batch_size: int = 200, *args, **kwargs
+        self,
+        documents: List,
+        batch_size: int = 200,
+        apply_vectoring: bool = False,
+        **kwargs
     ) -> List:
         """Insert documents"""
 
@@ -131,7 +154,12 @@ class DummyTestVectorSearch(BaseVectorSearch):
     def get_project_or_none(self) -> Dict[Text, Any]:
         return self._project
 
-    def insert_documents(self, documents: List[Dict], batch_size: int = 200) -> List:
+    def insert_documents(
+        self,
+        documents: List[Dict],
+        batch_size: int = 200,
+        apply_vectoring: bool = False
+    ) -> List:
 
         self._data.extend([{
             self.search_field: doc[self.search_field],
