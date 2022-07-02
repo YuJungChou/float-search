@@ -49,7 +49,9 @@ Vector-Search API of databases.
 
 ## Roadmap
 - [x] InMemoryVectorSearch
-- [ ] Batch encoder.
+- [x] Batch encoder.
+- [ ] FAISS Search
+- [ ] Annoy Search
 - [ ] ElasticSevenVectorSearch
 - [ ] ElasticVectorSearch
 - [ ] OpensearchVectorSearch
