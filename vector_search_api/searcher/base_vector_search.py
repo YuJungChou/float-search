@@ -132,9 +132,7 @@ class DummyTestVectorSearch(BaseVectorSearch):
         return self._project
 
     def insert_documents(self, documents: List[Dict], batch_size: int = 200) -> List:
-        print(self.search_field)
-        print(self.metadata_field)
-        print(self.vector_field)
+
         self._data.extend([{
             self.search_field: doc[self.search_field],
             self.metadata_field: doc[self.metadata_field],

@@ -4,31 +4,19 @@ import uuid
 
 import pytest
 
+from tests.utils.dummy_documents import get_test_documents
 from vector_search_api.helper.vector import random_array
 from vector_search_api.searcher.in_memory_vector_search import InMemoryVectorSearch
+from vector_search_api.vectorizer.random_vectorizer import RandomVectorizer
 
 logger = logging.getLogger('pytest')
 
 
+dims = 10
 search_field = 'test_text'
 metadata_field = 'test_metadata'
 vector_field = 'test_vector'
 similarity_field = 'test_similarity'
-
-
-def get_test_documents(num: int = 100):
-    test_documents = [
-        {
-            search_field: str(uuid.uuid4()),
-            metadata_field: {'GGWP': 'ABC'},
-            vector_field: random_array(8),
-        }
-        for _ in range(num)
-    ]
-    return test_documents
-
-
-test_documents = get_test_documents()
 
 
 @pytest.fixture(autouse=True, scope="module")
@@ -39,6 +27,7 @@ def vector_search_api():
         metadata_field=metadata_field,
         vector_field=vector_field,
         similarity_field=similarity_field,
+        dims=dims,
     )
     yield vs_api
 
@@ -54,7 +43,12 @@ def test_in_memory_vector_search_project_create(
 def test_in_memory_vector_search_insert_documents(
     vector_search_api: 'InMemoryVectorSearch'
 ):
-
+    test_documents = get_test_documents(
+        dims=dims,
+        search_field=search_field,
+        metadata_field=metadata_field,
+        vector_field=vector_field
+    )
     vector_search_api.insert_documents(test_documents)
     assert vector_search_api.count_documents() == len(test_documents)
 
@@ -63,8 +57,9 @@ def test_in_memory_vector_search_search_documents(
     vector_search_api: 'InMemoryVectorSearch'
 ):
 
+    test_case_idx = random.randint(0, len(vector_search_api._data[vector_field]) - 1)
     result = vector_search_api.search_documents(
-        random.choice(test_documents)[vector_field]
+        vector_search_api._data[vector_field][test_case_idx]
     )
     assert len(result) > 0
     assert (
@@ -76,16 +71,23 @@ def test_in_memory_vector_search_search_documents(
     assert round(result[0][similarity_field], 2) == 1.0
 
 
-def test_in_memory_vector_search_search_documents(
+def test_in_memory_vector_search_refresh_documents(
     vector_search_api: 'InMemoryVectorSearch'
 ):
 
-    new_documents = get_test_documents(num=213)
+    new_documents = get_test_documents(
+        num=213,
+        dims=dims,
+        search_field=search_field,
+        metadata_field=metadata_field,
+        vector_field=vector_field
+    )
     vector_search_api.refresh_documents(new_documents)
     assert vector_search_api.count_documents() == len(new_documents)
 
+    test_case_idx = random.randint(0, len(vector_search_api._data[vector_field]) - 1)
     result = vector_search_api.search_documents(
-        random.choice(new_documents)[vector_field]
+        vector_search_api._data[vector_field][test_case_idx]
     )
     assert len(result) > 0
     assert (
