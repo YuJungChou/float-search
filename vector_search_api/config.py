@@ -4,7 +4,7 @@ from pydantic import BaseConfig
 
 
 class Settings(BaseConfig):
-    logger_name = 'float-search'
+    logger_name = 'vector-search-api'
     logger = logging.getLogger(logger_name)
 
 

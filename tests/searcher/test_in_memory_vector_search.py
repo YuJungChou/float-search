@@ -4,8 +4,8 @@ import uuid
 
 import pytest
 
-from float_search.helper.vector import random_array
-from float_search.searcher.in_memory_vector_search import InMemoryVectorSearch
+from vector_search_api.helper.vector import random_array
+from vector_search_api.searcher.in_memory_vector_search import InMemoryVectorSearch
 
 logger = logging.getLogger('pytest')
 
@@ -34,7 +34,7 @@ test_documents = get_test_documents()
 @pytest.fixture(autouse=True, scope="module")
 def vector_search_api():
     vs_api = InMemoryVectorSearch(
-        project_name='test_float_search',
+        project_name='test_vector_search_api',
         search_field=search_field,
         metadata_field=metadata_field,
         vector_field=vector_field,

@@ -1,15 +1,15 @@
-# float-search
+# Vector Search API
 Vector-Search API of databases.
 
 ## Quick Start
 1. Install package.
 ```sh
-(env) pip install float-search
+(env) pip install vector-search-api
 ```
 
 2. Execute code.
 ```python
->>> from float_search.searcher import InMemoryVectorSearch
+>>> from vector_search_api.searcher import InMemoryVectorSearch
 >>>
 >>> vs_api = InMemoryVectorSearch(project_name='vs')
 >>>

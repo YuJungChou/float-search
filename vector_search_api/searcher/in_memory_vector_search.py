@@ -2,9 +2,9 @@ from typing import Any, Dict, List, Text
 
 import numpy as np
 
-from float_search.helper.vector import cosine_similarity
-from float_search.helper.utils import batch_chunks
-from float_search.searcher.base_vector_search import BaseVectorSearch
+from vector_search_api.helper.vector import cosine_similarity
+from vector_search_api.helper.utils import batch_chunks
+from vector_search_api.searcher.base_vector_search import BaseVectorSearch
 
 
 class InMemoryVectorSearch(BaseVectorSearch):

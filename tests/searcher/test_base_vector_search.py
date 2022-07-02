@@ -2,8 +2,8 @@ import logging
 import random
 import uuid
 
-from float_search.helper.vector import random_array
-from float_search.searcher.base_vector_search import DummyTestVectorSearch
+from vector_search_api.helper.vector import random_array
+from vector_search_api.searcher.base_vector_search import DummyTestVectorSearch
 
 logger = logging.getLogger('pytest')
 
@@ -29,7 +29,7 @@ def get_test_documents(num: int = 100):
 def test_base_project_create():
 
     fs_api = DummyTestVectorSearch(
-        project_name='test_float_search',
+        project_name='test_vector_search_api',
         search_field=search_field,
         metadata_field=metadata_field,
         vector_field=vector_field,
@@ -42,7 +42,7 @@ def test_base_project_create():
 def test_base_operate_documents():
 
     fs_api = DummyTestVectorSearch(
-        project_name='test_float_search',
+        project_name='test_vector_search_api',
         search_field=search_field,
         metadata_field=metadata_field,
         vector_field=vector_field,

@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from float_search.helper.vector import random_array
-from float_search.vectorizer.base_vectorizer import BaseVectorizer
+from vector_search_api.helper.vector import random_array
+from vector_search_api.vectorizer.base_vectorizer import BaseVectorizer
 
 
 class RandomVectorizer(BaseVectorizer):

@@ -1,6 +1,6 @@
-import float_search
-from float_search.version import version_name
+import vector_search_api
+from vector_search_api.version import version_name
 
 
 def test_version():
-    assert float_search.__version__ == version_name
+    assert vector_search_api.__version__ == version_name

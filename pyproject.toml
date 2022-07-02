@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "float-search"
+name = "vector-search-api"
 version = "0.1.0"
 description = "Vector-Search API of databases."
 authors = ["AllenChou <f1470891079@gmail.com>"]
