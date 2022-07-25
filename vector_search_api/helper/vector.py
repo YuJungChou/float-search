@@ -16,7 +16,7 @@ def multiply_one_or_minus_one(x: float) -> float:
     return (1 if random.choice([True, False]) is True else -1) * x
 
 
-def random_array(dims: Union[int, Tuple], use_negative: bool = True):
+def random_array(dims: Union[int, Tuple], use_negative: bool = True) -> np.array:
     """Get random array."""
 
     if isinstance(dims, int):

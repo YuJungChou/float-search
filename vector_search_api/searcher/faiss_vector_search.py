@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Text, Tuple, Union
+from typing import Any, Dict, List, Optional, Text, Tuple, Union
 
 import numpy as np
 from pydantic import BaseModel
@@ -6,9 +6,6 @@ from vector_search_api.config import settings
 from vector_search_api.helper.utils import batch_chunks
 from vector_search_api.helper.vector import distance_to_similarity
 from vector_search_api.searcher.base_vector_search import BaseVectorSearch
-
-if TYPE_CHECKING:
-    from vector_search_api.vectorizer.base_vectorizer import BaseVectorizer
 
 logger = settings.logger
 
@@ -77,13 +74,13 @@ class FaissVectorSearch(BaseVectorSearch):
             brach_metadata_items = []
 
             for doc in batch_docs:
-                batch_vector += [doc[self.vector_field]]
+                batch_vectors += [doc[self.vector_field]]
                 batch_search_items += [doc[self.search_field]]
-                brach_metadata_field += [doc.get(self.metadata_field, {})]
+                brach_metadata_items += [doc.get(self.metadata_field, {})]
 
             self._index.add(np.array(batch_vectors).astype('float32'))
 
-            self._data[self.vector_field].extend(batch_vector)
+            self._data[self.vector_field].extend(batch_vectors)
             self._data[self.search_field].extend(batch_search_items)
             self._data[self.metadata_field].extend(brach_metadata_items)
 
@@ -96,7 +93,7 @@ class FaissVectorSearch(BaseVectorSearch):
 
         query_np = np.array([query]).astype('float32')
 
-        D, I = self._index.search(query_np, size)
+        distances, doc_indexes = self._index.search(query_np, size)
 
         result: List[Dict] = [
             {
@@ -104,10 +101,9 @@ class FaissVectorSearch(BaseVectorSearch):
                 self.metadata_field: self._data[self.metadata_field][idx],
                 self.vector_field: self._data[self.vector_field][idx],
                 self.similarity_field: distance_to_similarity[distance],
-            } for distance, idx in zip(D[0], I[0])
+            } for distance, idx in zip(distances[0], doc_indexes[0])
         ]
         return result
-
 
     def refresh_documents(
         self,

@@ -6,6 +6,12 @@ from vector_search_api.helper.vector import random_array
 
 default_metadata = {'GGWP': 'ABC'}
 
+test_text_examples = [
+    'First do this.', 'Then do it better.', 'open the light.', 'open the air con.',
+    'open lights in room', 'open all lights', 'talk a joke.', 'play some music.',
+    'wake me up.', 'อากาศตอนนี้เป็นอย่างไรบ้าง', '台積電現在股價多少'
+]
+
 
 def get_test_documents(
     search_field: Text,
