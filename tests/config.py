@@ -10,7 +10,7 @@ class Settings(BaseConfig):
 
     # Resources
     EMBEDDING_URL = os.environ.get('EMBEDDING_URL')
-    EMBEDDING_DIMS = eval(os.environ.get('EMBEDDING_DIMS'))
+    EMBEDDING_DIMS = eval(os.environ.get('EMBEDDING_DIMS', '8'))
 
 
 settings = Settings()

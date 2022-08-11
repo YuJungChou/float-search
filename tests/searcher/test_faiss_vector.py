@@ -1,6 +1,5 @@
 import copy
 import logging
-from typing import List, Text
 
 import pytest
 
@@ -41,13 +40,20 @@ def test_vs_api_project_create(
 def test_vs_api_common_usages(
     vs_api: 'FaissVectorSearch'
 ):
-    embeddings = get_texts_embeddings(texts=test_text_examples)
+    embeddings = get_texts_embeddings(
+        texts=test_text_examples, dims=settings.EMBEDDING_DIMS
+    )
     documents = [{
         search_field: text,
         metadata_field: copy.deepcopy(default_metadata),
         vector_field: emb,
     } for text, emb in zip(test_text_examples, embeddings)]
 
-
     insert_count = vs_api.insert_documents(documents=documents)
     assert insert_count == len(documents)
+
+    logger.error(vs_api._index.ntotal)
+    results = vs_api.search_documents(query=documents[0][vector_field])
+    assert round(results[0]['test_similarity'], 2) == 1.0
+    for res in results:
+        print(f"{res['test_similarity']}: {res['test_text']}")

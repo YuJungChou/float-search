@@ -92,6 +92,7 @@ class FaissVectorSearch(BaseVectorSearch):
         """search documents"""
 
         query_np = np.array([query]).astype('float32')
+        size = self._index.ntotal if size >= self._index.ntotal else size
 
         distances, doc_indexes = self._index.search(query_np, size)
 
@@ -100,7 +101,7 @@ class FaissVectorSearch(BaseVectorSearch):
                 self.search_field: self._data[self.search_field][idx],
                 self.metadata_field: self._data[self.metadata_field][idx],
                 self.vector_field: self._data[self.vector_field][idx],
-                self.similarity_field: distance_to_similarity[distance],
+                self.similarity_field: distance_to_similarity(distance),
             } for distance, idx in zip(distances[0], doc_indexes[0])
         ]
         return result

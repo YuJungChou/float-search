@@ -14,6 +14,9 @@ def get_texts_embeddings(
     if settings.EMBEDDING_URL is not None:
         embeddings = requests.post(settings.EMBEDDING_URL, json=texts).json()
     else:
-        embeddings = random_array(dims=dims, use_negative=use_negative)
+        embeddings = [
+            random_array(dims=dims, use_negative=use_negative)
+            for _ in range(len(texts))
+        ]
 
     return embeddings
