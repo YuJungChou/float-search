@@ -16,7 +16,7 @@ def multiply_one_or_minus_one(x: float) -> float:
     return (1 if random.choice([True, False]) is True else -1) * x
 
 
-def random_array(dims: Union[int, Tuple], use_negative: bool = True):
+def random_array(dims: Union[int, Tuple], use_negative: bool = True) -> np.array:
     """Get random array."""
 
     if isinstance(dims, int):
@@ -27,3 +27,8 @@ def random_array(dims: Union[int, Tuple], use_negative: bool = True):
         arr = np.vectorize(multiply_one_or_minus_one)(arr)
     return arr
 
+
+def distance_to_similarity(arr: np.array) -> np.array:
+    """Transfer vector distance to similarity."""
+
+    return 1 / (1 + arr)

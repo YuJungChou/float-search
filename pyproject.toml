@@ -10,6 +10,11 @@ python = ">=3.7.1,<4.0.0"
 pydantic = "1.*"
 numpy = "1.*"
 tqdm = "4.*"
+faiss-cpu = {version = "1.*", optional = true}
+
+[tool.poetry.extras]
+all = ["faiss-cpu"]
+faiss = ["faiss-cpu"]
 
 [tool.poetry.dev-dependencies]
 pytest = "7.*"
