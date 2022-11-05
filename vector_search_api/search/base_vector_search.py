@@ -25,7 +25,7 @@ class BaseVectorSearch:
 
         raise NotImplementedError()
 
-    def upsert(self, records: List['Record']) -> Dict:
+    def upsert(self, records: List["Record"]) -> Dict:
         """"""
 
         raise NotImplementedError()

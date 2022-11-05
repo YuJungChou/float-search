@@ -7,7 +7,9 @@ from vector_search_api.helper.vector import random_array
 
 
 def get_texts_embeddings(
-    texts: List[Text], dims: Optional[Union[int, Tuple]] = None, use_negative: bool = True
+    texts: List[Text],
+    dims: Optional[Union[int, Tuple]] = None,
+    use_negative: bool = True,
 ) -> List[float]:
     """Query texts embeddings. Request external resource if EMBEDDING_URL is supplied."""
 

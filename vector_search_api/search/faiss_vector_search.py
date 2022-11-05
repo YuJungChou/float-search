@@ -12,19 +12,18 @@ logger = settings.logger
 try:
     import faiss
 except ImportError:
-    logger.warning('Trying import faiss but uninstalled.')
+    logger.warning("Trying import faiss but uninstalled.")
 
 
 class FaissVectorSearch(BaseVectorSearch):
-
     def __init__(
         self,
         project_name: Text,
         dims: Union[Tuple, int],
-        search_field: Text = 'text',
-        metadata_field: Text = 'metadata',
-        vector_field: Text = 'vector',
-        similarity_field: Text = 'similarity',
+        search_field: Text = "text",
+        metadata_field: Text = "metadata",
+        vector_field: Text = "vector",
+        similarity_field: Text = "similarity",
         **kwargs
     ):
         super(FaissVectorSearch, self).__init__(
@@ -36,7 +35,7 @@ class FaissVectorSearch(BaseVectorSearch):
             **kwargs
         )
         self.project_name = project_name
-        self._project = {'project_name': self.project_name}
+        self._project = {"project_name": self.project_name}
 
         self._data: Dict[Text, List[Any]] = {
             self.search_field: [],
@@ -52,7 +51,7 @@ class FaissVectorSearch(BaseVectorSearch):
         """Create project."""
 
         if self._project is None:
-            self._project = {'name': self.project_name}
+            self._project = {"name": self.project_name}
         return self._project
 
     def get_project_or_none(
@@ -78,7 +77,7 @@ class FaissVectorSearch(BaseVectorSearch):
                 batch_search_items += [doc[self.search_field]]
                 brach_metadata_items += [doc.get(self.metadata_field, {})]
 
-            self._index.add(np.array(batch_vectors).astype('float32'))
+            self._index.add(np.array(batch_vectors).astype("float32"))
 
             self._data[self.vector_field].extend(batch_vectors)
             self._data[self.search_field].extend(batch_search_items)
@@ -91,7 +90,7 @@ class FaissVectorSearch(BaseVectorSearch):
     ) -> List[Dict]:
         """search documents"""
 
-        query_np = np.array([query]).astype('float32')
+        query_np = np.array([query]).astype("float32")
         size = self._index.ntotal if size >= self._index.ntotal else size
 
         distances, doc_indexes = self._index.search(query_np, size)
@@ -102,15 +101,12 @@ class FaissVectorSearch(BaseVectorSearch):
                 self.metadata_field: self._data[self.metadata_field][idx],
                 self.vector_field: self._data[self.vector_field][idx],
                 self.similarity_field: distance_to_similarity(distance),
-            } for distance, idx in zip(distances[0], doc_indexes[0])
+            }
+            for distance, idx in zip(distances[0], doc_indexes[0])
         ]
         return result
 
-    def refresh_documents(
-        self,
-        documents: List[Dict],
-        batch_size: int = 200
-    ) -> List:
+    def refresh_documents(self, documents: List[Dict], batch_size: int = 200) -> List:
         """Refresh vectors."""
 
         self._data: Dict[Text, List[Any]] = {
@@ -118,10 +114,7 @@ class FaissVectorSearch(BaseVectorSearch):
             self.metadata_field: [],
             self.vector_field: [],
         }
-        self.insert_documents(
-            documents=documents,
-            batch_size=batch_size
-        )
+        self.insert_documents(documents=documents, batch_size=batch_size)
         return self.count_documents()
 
     def count_documents(self) -> int:

@@ -20,7 +20,7 @@ def random_array(dims: Union[int, Tuple], use_negative: bool = True) -> np.array
     """Get random array."""
 
     if isinstance(dims, int):
-        dims = (dims, )
+        dims = (dims,)
 
     arr = np.random.rand(*dims)
     if use_negative is True:
