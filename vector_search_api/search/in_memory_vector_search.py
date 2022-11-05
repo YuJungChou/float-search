@@ -52,9 +52,11 @@ class InMemoryVectorSearch(BaseVectorSearch):
                 {
                     "id": self._ids[idx],
                     "score": cos_sim[idx],
-                    "value": self._metadata[self._ids[idx]]
-                    if include_values is True
-                    else None,
+                    "value": (
+                        self._metadata[self._ids[idx]]
+                        if include_values is True
+                        else None
+                    ),
                 }
                 for idx in top_k_idxs
             ]
