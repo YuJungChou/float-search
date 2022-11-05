@@ -1,11 +1,11 @@
 import logging
 
-from pydantic import BaseConfig
+from pydantic import BaseSettings
 
 
-class Settings(BaseConfig):
-    logger_name = 'vector-search-api'
-    logger = logging.getLogger(logger_name)
+class Settings(BaseSettings):
+    logger_name = "vector-search-api"
 
 
 settings = Settings()
+logger = logging.getLogger(settings.logger_name)

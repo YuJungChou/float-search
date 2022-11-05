@@ -1,16 +1,12 @@
 import os
 
-from pydantic import BaseConfig
+from pydantic import BaseSettings
 
 
-class Settings(BaseConfig):
+class Settings(BaseSettings):
 
     # Testing session
-    PROJECT_NAME = os.environ.get('EMBEDDING_URL', 'test_vector_search_api')
-
-    # Resources
-    EMBEDDING_URL = os.environ.get('EMBEDDING_URL')
-    EMBEDDING_DIMS = eval(os.environ.get('EMBEDDING_DIMS', '8'))
+    test_project_name = os.environ.get("TEST_PROJECT_NAME", "pytest")
 
 
 settings = Settings()

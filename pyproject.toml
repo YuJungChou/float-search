@@ -6,7 +6,7 @@ authors = ["AllenChou <f1470891079@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.7.1,<3.11.0"
+python = ">= 3.7.1, < 4.0.0"
 pydantic = "1.*"
 numpy = "1.*"
 tqdm = "4.*"
@@ -17,12 +17,22 @@ all = ["faiss-cpu"]
 faiss = ["faiss-cpu"]
 
 [tool.poetry.dev-dependencies]
-pytest = "7.*"
-pytest-asyncio = "0.*"
-pytest-cov = "3.*"
-pep440-version-utils = "*"
+black = "*"
 flake8 = "*"
-yapf = "0.*"
+pep440-version-utils = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+yapf = "*"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+flake8 = "*"
+pep440-version-utils = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-cov = "*"
+yapf = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
