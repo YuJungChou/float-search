@@ -6,7 +6,7 @@ import pytest
 
 from tests.utils.dummy_documents import get_test_documents
 from vector_search_api.helper.vector import random_array
-from vector_search_api.searcher.in_memory_vector_search import InMemoryVectorSearch
+from vector_search_api.search.in_memory_vector_search import InMemoryVectorSearch
 from vector_search_api.vectorizer.random_vectorizer import RandomVectorizer
 
 logger = logging.getLogger('pytest')

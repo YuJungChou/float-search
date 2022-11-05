@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from vector_search_api.config import settings
 from vector_search_api.helper.utils import batch_chunks
 from vector_search_api.helper.vector import distance_to_similarity
-from vector_search_api.searcher.base_vector_search import BaseVectorSearch
+from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 logger = settings.logger
 

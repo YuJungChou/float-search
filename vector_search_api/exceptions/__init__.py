@@ -1,4 +1,4 @@
-from vector_search_api.exceptions.searcher import EmptyVectorError
+from vector_search_api.exceptions.search import EmptyVectorError
 
 
 __all__ = [

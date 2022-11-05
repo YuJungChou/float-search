@@ -6,7 +6,7 @@ import pytest
 from tests.config import settings
 from tests.utils.dummy_documents import default_metadata, test_text_examples
 from tests.utils.embedding import get_texts_embeddings
-from vector_search_api.searcher.faiss_vector_search import FaissVectorSearch
+from vector_search_api.search.faiss_vector_search import FaissVectorSearch
 
 logger = logging.getLogger('pytest')
 

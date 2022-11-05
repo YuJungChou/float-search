@@ -1,9 +1,9 @@
 import os
 
-from pydantic import BaseConfig
+from pydantic import BaseSettings
 
 
-class Settings(BaseConfig):
+class Settings(BaseSettings):
 
     # Testing session
     PROJECT_NAME = os.environ.get('EMBEDDING_URL', 'test_vector_search_api')
