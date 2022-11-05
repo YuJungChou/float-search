@@ -1,2 +1,2 @@
 # Set version name here.
-version_name = "0.2.0"
+version_name = "0.4.0"
