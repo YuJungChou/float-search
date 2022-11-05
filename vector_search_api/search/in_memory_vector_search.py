@@ -23,7 +23,11 @@ class InMemoryVectorSearch(BaseVectorSearch):
         return {"count": self._ids.size}
 
     def query(
-        self, vector: List[float], top_k: int = 3, include_values: bool = False
+        self,
+        vector: List[float],
+        top_k: int = 3,
+        include_values: bool = False,
+        include_metadata: bool = False,
     ) -> Dict:
         """Query vector search.
 
@@ -37,6 +41,9 @@ class InMemoryVectorSearch(BaseVectorSearch):
 
         include_values : bool, default is False
             Return vector or not.
+
+        include_metadata : bool, default is False
+            Return metadata or not.
 
         Returns
         -------
@@ -52,9 +59,10 @@ class InMemoryVectorSearch(BaseVectorSearch):
                 {
                     "id": self._ids[idx],
                     "score": cos_sim[idx],
-                    "value": (
+                    "value": (self._vectors[idx] if include_values is True else None),
+                    "metadata": (
                         self._metadata[self._ids[idx]]
-                        if include_values is True
+                        if include_metadata is True
                         else None
                     ),
                 }

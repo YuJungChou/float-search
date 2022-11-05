@@ -19,7 +19,11 @@ class BaseVectorSearch:
         raise NotImplementedError()
 
     def query(
-        self, vector: List[float], top_k: int = 3, include_values: bool = False
+        self,
+        vector: List[float],
+        top_k: int = 3,
+        include_values: bool = False,
+        include_metadata: bool = False,
     ) -> Dict:
         """Query vector search."""
 

@@ -30,5 +30,7 @@ def test_api_upsert():
 
 
 def test_api_query():
-    result = vs_api.query(random_array(dims=dims), include_values=True)
+    result = vs_api.query(
+        random_array(dims=dims), include_values=True, include_metadata=True
+    )
     assert result
