@@ -1,34 +1,48 @@
-from typing import Any, Dict, List, Optional, Text
+from typing import Any, Dict, List, Text, Tuple, Union
 
 import numpy as np
 
-from vector_search_api.config import settings
 from vector_search_api.helper.vector import cosine_similarity
 from vector_search_api.schema import Record
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
-logger = settings.logger
-
 
 class InMemoryVectorSearch(BaseVectorSearch):
-    def __init__(self, project: Text, dims: Optional[int] = None, **kwargs):
-        """"""
+    def __init__(self, project: Text, dims: int, **kwargs):
+        """Initialize basic attributes project, dims, also the storage of records."""
 
         super(InMemoryVectorSearch, self).__init__(project=project, dims=dims, **kwargs)
 
         self._metadata: Dict[Text, Dict[Text, Any]] = {}
         self._ids = np.array([])
-        self._vectors = np.array([])
+        self._vectors = np.empty((0, self.dims))
 
     def describe(self) -> Dict:
-        """"""
+        """Describe the records."""
 
         return {"count": self._ids.size}
 
     def query(
         self, vector: List[float], top_k: int = 3, include_values: bool = False
     ) -> Dict:
-        """"""
+        """Query vector search.
+
+        Parameters
+        ----------
+        vector : list[float]
+            Query with vector.
+
+        top_k : int
+            Top k.
+
+        include_values : bool, default is False
+            Return vector or not.
+
+        Returns
+        -------
+        query_result : dict
+            Query result.
+        """
 
         cos_sim = cosine_similarity(np.array(vector), targets=self._vectors)
         top_k_idxs = np.argsort(cos_sim)[-top_k:][::-1]
@@ -38,15 +52,17 @@ class InMemoryVectorSearch(BaseVectorSearch):
                 {
                     "id": self._ids[idx],
                     "score": cos_sim[idx],
-                    "value": self._metadata[idx] if include_values is True else None,
+                    "value": self._metadata[self._ids[idx]]
+                    if include_values is True
+                    else None,
                 }
                 for idx in top_k_idxs
             ]
         }
         return result
 
-    def upsert(self, records: List[Record]) -> Dict:
-        """"""
+    def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
+        """Upsert records."""
 
         update_ids = []
         update_vectors = []
@@ -67,4 +83,4 @@ class InMemoryVectorSearch(BaseVectorSearch):
         self._ids = np.append(self._ids, update_ids)
         self._vectors = np.concatenate((self._vectors, update_vectors), axis=0)
 
-        return {}
+        return {"success": True}
