@@ -59,7 +59,9 @@ class InMemoryVectorSearch(BaseVectorSearch):
                 {
                     "id": self._ids[idx],
                     "score": cos_sim[idx],
-                    "value": (self._vectors[idx] if include_values is True else None),
+                    "value": (
+                        list(self._vectors[idx]) if include_values is True else None
+                    ),
                     "metadata": (
                         self._metadata[self._ids[idx]]
                         if include_metadata is True
