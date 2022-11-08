@@ -16,10 +16,10 @@ class PineconeVectorSearch(BaseVectorSearch):
     def __init__(
         self,
         project: Text,
-        index: Text,
-        namespace: Text = "",
+        index: Text = settings.pinecone_index_name,
+        namespace: Text = settings.pinecone_namespace,
         api_key: Text = settings.pinecone_api_key,
-        environment=settings.pinecone_environment,
+        environment: Text = settings.pinecone_environment,
         dims: Optional[int] = None,
         init_probe: bool = True,
         **kwargs

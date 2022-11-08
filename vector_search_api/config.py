@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     # Pinecone
     pinecone_api_key: Text = str(uuid.uuid4())
     pinecone_environment: Text = "us-west1-gcp"
+    pinecone_index_name: Text = "pinecone-index"
+    pinecone_namespace: Text = ""
 
 
 settings = Settings()
