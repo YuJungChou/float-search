@@ -7,9 +7,7 @@ from vector_search_api.search.in_memory_vector_search import InMemoryVectorSearc
 
 logger = logging.getLogger("pytest")
 
-
 dims = 8
-
 
 vs_api = InMemoryVectorSearch(project=settings.test_project_name, dims=dims)
 

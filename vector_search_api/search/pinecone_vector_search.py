@@ -2,10 +2,10 @@ from typing import Dict, List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import Record
 from vector_search_api.search.base_vector_search import BaseVectorSearch
-from vector_search_api.schema.pinecone import (
-    PineconeIndex,
-    PineconeQueryResult,
-    PineconeUpsertResult,
+from vector_search_api.schema.result import (
+    Index,
+    QueryResult,
+    UpsertResult,
 )
 from vector_search_api.config import settings
 
@@ -40,7 +40,7 @@ class PineconeVectorSearch(BaseVectorSearch):
             pinecone.whoami()
             self.describe()
 
-    def describe(self) -> Union[Dict, PineconeIndex]:
+    def describe(self) -> Union[Dict, Index]:
         """Describe the api status."""
 
         index_stats = self._index.describe_index_stats()
@@ -54,7 +54,7 @@ class PineconeVectorSearch(BaseVectorSearch):
         include_values: bool = False,
         include_metadata: bool = False,
         namespace: Optional[Text] = None,
-    ) -> Union[Dict, PineconeQueryResult]:
+    ) -> Union[Dict, QueryResult]:
         """Query vector search."""
 
         namespace = namespace or self.namespace
@@ -70,7 +70,7 @@ class PineconeVectorSearch(BaseVectorSearch):
 
     def upsert(
         self, records: List[Union[Record, Tuple]], namespace: Optional[Text] = None
-    ) -> Union[Dict, PineconeUpsertResult]:
+    ) -> Union[Dict, UpsertResult]:
         """Upsert records."""
 
         namespace = namespace or self.namespace

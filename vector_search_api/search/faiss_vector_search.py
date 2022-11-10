@@ -7,7 +7,6 @@ from vector_search_api.helper.vector import distance_to_similarity
 from vector_search_api.schema import Record
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
-
 try:
     import faiss
 except ImportError:

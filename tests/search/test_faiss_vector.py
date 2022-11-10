@@ -7,7 +7,6 @@ from vector_search_api.search.faiss_vector_search import FaissVectorSearch
 
 logger = logging.getLogger("pytest")
 
-
 dims = 8
 
 vs_api = FaissVectorSearch(project=settings.test_project_name, dims=dims)

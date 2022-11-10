@@ -8,14 +8,11 @@ from vector_search_api.search.pinecone_vector_search import PineconeVectorSearch
 
 logger = logging.getLogger("pytest")
 
-
 dims = 768
-
 
 vs_api = PineconeVectorSearch(
     project=settings.test_project_name, dims=dims, init_probe=False
 )
-
 
 try:
     vs_api.describe()
