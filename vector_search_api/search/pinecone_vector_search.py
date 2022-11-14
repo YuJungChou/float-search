@@ -4,6 +4,7 @@ from vector_search_api.schema import Record
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 from vector_search_api.schema.result import (
     Index,
+    Namespace,
     QueryResult,
     UpsertResult,
 )
@@ -40,11 +41,15 @@ class PineconeVectorSearch(BaseVectorSearch):
             pinecone.whoami()
             self.describe()
 
-    def describe(self) -> Union[Dict, Index]:
+    def describe(self) -> "Index":
         """Describe the api status."""
 
-        index_stats = self._index.describe_index_stats()
-        self.dims = index_stats["dimension"]
+        result: Dict = self._index.describe_index_stats().to_dict()
+        namespaces = {
+            k: Namespace(**v) for k, v in result.pop("namespaces", {}).items()
+        }
+        index_stats = Index(namespaces=namespaces, **result)
+        self.dims = index_stats.dimension
         return index_stats
 
     def query(

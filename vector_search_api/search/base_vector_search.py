@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import Record
+from vector_search_api.schema.result import Index
 
 
 class BaseVectorSearch:
@@ -13,7 +14,7 @@ class BaseVectorSearch:
         self.dims = int(dims) if dims else None
         self.kwargs = kwargs
 
-    def describe(self) -> Dict:
+    def describe(self) -> "Index":
         """Describe the api status."""
 
         raise NotImplementedError()

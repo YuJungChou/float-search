@@ -2,9 +2,10 @@ from typing import Any, Dict, List, Text, Tuple, Union
 
 import numpy as np
 
-from vector_search_api.config import logger, settings
+from vector_search_api.config import logger
 from vector_search_api.helper.vector import distance_to_similarity
 from vector_search_api.schema import Record
+from vector_search_api.schema.result import Index, Namespace
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 try:
@@ -26,7 +27,13 @@ class FaissVectorSearch(BaseVectorSearch):
     def describe(self) -> Dict:
         """Describe the records."""
 
-        return {"count": self._ids.size}
+        index_stats = Index(
+            dimension=self.dims,
+            index_fullness=0.0,
+            total_vector_count=self._ids.size,
+            namespaces={"": Namespace(vector_count=self._ids.size)},
+        )
+        return index_stats
 
     def query(
         self,

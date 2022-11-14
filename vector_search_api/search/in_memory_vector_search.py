@@ -4,6 +4,7 @@ import numpy as np
 
 from vector_search_api.helper.vector import cosine_similarity
 from vector_search_api.schema import Record
+from vector_search_api.schema.result import Index, Namespace
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 
@@ -17,10 +18,16 @@ class InMemoryVectorSearch(BaseVectorSearch):
         self._ids = np.array([])
         self._vectors = np.empty((0, self.dims))
 
-    def describe(self) -> Dict:
+    def describe(self) -> "Index":
         """Describe the records."""
 
-        return {"count": self._ids.size}
+        index_stats = Index(
+            dimension=self.dims,
+            index_fullness=0.0,
+            total_vector_count=self._ids.size,
+            namespaces={"": Namespace(vector_count=self._ids.size)},
+        )
+        return index_stats
 
     def query(
         self,
