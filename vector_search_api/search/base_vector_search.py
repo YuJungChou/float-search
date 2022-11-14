@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import Record
-from vector_search_api.schema.result import Index
+from vector_search_api.schema.result import Index, QueryResult
 
 
 class BaseVectorSearch:
@@ -25,7 +25,7 @@ class BaseVectorSearch:
         top_k: int = 3,
         include_values: bool = False,
         include_metadata: bool = False,
-    ) -> Dict:
+    ) -> "QueryResult":
         """Query vector search."""
 
         raise NotImplementedError()

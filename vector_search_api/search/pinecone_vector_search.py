@@ -4,6 +4,7 @@ from vector_search_api.schema import Record
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 from vector_search_api.schema.result import (
     Index,
+    Match,
     Namespace,
     QueryResult,
     UpsertResult,
@@ -59,16 +60,21 @@ class PineconeVectorSearch(BaseVectorSearch):
         include_values: bool = False,
         include_metadata: bool = False,
         namespace: Optional[Text] = None,
-    ) -> Union[Dict, QueryResult]:
+    ) -> Union[Dict, "QueryResult"]:
         """Query vector search."""
 
         namespace = namespace or self.namespace
-        query_result = self._index.query(
+        result = self._index.query(
             vector=vector,
             top_k=top_k,
             include_values=include_values,
             include_metadata=include_metadata,
             namespace=namespace,
+        ).to_dict()
+
+        query_result = QueryResult(
+            matches=[Match(**m) for m in result["matches"]],
+            namespace=result["namespace"],
         )
 
         return query_result

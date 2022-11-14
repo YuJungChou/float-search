@@ -4,7 +4,7 @@ import numpy as np
 
 from vector_search_api.helper.vector import cosine_similarity
 from vector_search_api.schema import Record
-from vector_search_api.schema.result import Index, Namespace
+from vector_search_api.schema.result import Index, Match, Namespace, QueryResult
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 
@@ -35,7 +35,7 @@ class InMemoryVectorSearch(BaseVectorSearch):
         top_k: int = 3,
         include_values: bool = False,
         include_metadata: bool = False,
-    ) -> Dict:
+    ) -> "QueryResult":
         """Query vector search.
 
         Parameters
@@ -61,23 +61,25 @@ class InMemoryVectorSearch(BaseVectorSearch):
         cos_sim = cosine_similarity(np.array(vector), targets=self._vectors)
         top_k_idxs = np.argsort(cos_sim)[-top_k:][::-1]
 
-        result: Dict = {
-            "matches": [
-                {
-                    "id": self._ids[idx],
-                    "score": cos_sim[idx],
-                    "value": (
+        result: Dict = QueryResult(
+            matches=[
+                Match(
+                    id=self._ids[idx],
+                    score=cos_sim[idx],
+                    values=(
                         list(self._vectors[idx]) if include_values is True else None
                     ),
-                    "metadata": (
+                    metadata=(
                         self._metadata[self._ids[idx]]
                         if include_metadata is True
                         else None
                     ),
-                }
+                    sparseValues={},
+                )
                 for idx in top_k_idxs
-            ]
-        }
+            ],
+            namespace="",
+        )
         return result
 
     def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:

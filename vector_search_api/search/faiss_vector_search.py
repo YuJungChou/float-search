@@ -5,7 +5,7 @@ import numpy as np
 from vector_search_api.config import logger
 from vector_search_api.helper.vector import distance_to_similarity
 from vector_search_api.schema import Record
-from vector_search_api.schema.result import Index, Namespace
+from vector_search_api.schema.result import Index, Match, Namespace, QueryResult
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 try:
@@ -41,7 +41,7 @@ class FaissVectorSearch(BaseVectorSearch):
         top_k: int = 3,
         include_values: bool = False,
         include_metadata: bool = False,
-    ) -> Dict:
+    ) -> "QueryResult":
         """Query vector search."""
 
         vector_np = np.array([vector]).astype("float32")
@@ -49,23 +49,25 @@ class FaissVectorSearch(BaseVectorSearch):
 
         distances, top_k_idxs = self._index.search(vector_np, top_k)
 
-        result: Dict = {
-            "matches": [
-                {
-                    "id": self._ids[idx],
-                    "score": distance_to_similarity(distance),
-                    "value": (
+        result: Dict = QueryResult(
+            matches=[
+                Match(
+                    id=self._ids[idx],
+                    score=distance_to_similarity(distance),
+                    values=(
                         list(self._vectors[idx]) if include_values is True else None
                     ),
-                    "metadata": (
+                    metadata=(
                         self._metadata[self._ids[idx]]
                         if include_metadata is True
                         else None
                     ),
-                }
+                    sparseValues={},
+                )
                 for distance, idx in zip(distances[0], top_k_idxs[0])
-            ]
-        }
+            ],
+            namespace="",
+        )
         return result
 
     def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
