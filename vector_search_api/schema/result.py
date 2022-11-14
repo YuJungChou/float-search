@@ -1,24 +1,24 @@
 from typing import Dict, List, Optional, Text
 
-from pydantic import BaseModel
+from vector_search_api.schema.base import DataclassBase
 
 
-class PineconeNamespace(BaseModel):
+class Namespace(DataclassBase):
     vector_count: int
 
 
-class PineconeIndex(BaseModel):
+class Index(DataclassBase):
     dimension: int
     index_fullness: float
-    namespaces: Dict[Text, PineconeNamespace]
+    namespaces: Dict[Text, Namespace]
     total_vector_count: int
 
 
-class PineconeUpsertResult(BaseModel):
+class UpsertResult(DataclassBase):
     upserted_count: int
 
 
-class PineconeMatch(BaseModel):
+class Match(DataclassBase):
     id: Text
     score: float
     sparseValues: Dict
@@ -26,6 +26,6 @@ class PineconeMatch(BaseModel):
     metadata: Optional[Dict] = None
 
 
-class PineconeQueryResult(BaseModel):
-    matches: List[PineconeMatch]
+class QueryResult(DataclassBase):
+    matches: List[Match]
     namespace: Text
