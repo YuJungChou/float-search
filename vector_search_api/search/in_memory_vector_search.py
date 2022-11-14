@@ -3,12 +3,12 @@ from typing import Any, Dict, List, Text, Tuple, Union
 import numpy as np
 
 from vector_search_api.helper.vector import cosine_similarity
-from vector_search_api.schema import Record
-from vector_search_api.schema.result import (
+from vector_search_api.schema import (
     Index,
     Match,
     Namespace,
     QueryResult,
+    Record,
     UpsertResult,
 )
 from vector_search_api.search.base_vector_search import BaseVectorSearch

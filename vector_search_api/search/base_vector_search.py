@@ -1,7 +1,11 @@
 from typing import List, Optional, Text, Tuple, Union
 
-from vector_search_api.schema import Record
-from vector_search_api.schema.result import Index, QueryResult, UpsertResult
+from vector_search_api.schema import (
+    Index,
+    QueryResult,
+    Record,
+    UpsertResult,
+)
 
 
 class BaseVectorSearch:
