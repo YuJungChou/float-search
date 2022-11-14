@@ -1,7 +1,7 @@
-from typing import Dict, List, Optional, Text, Tuple, Union
+from typing import List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import Record
-from vector_search_api.schema.result import Index, QueryResult
+from vector_search_api.schema.result import Index, QueryResult, UpsertResult
 
 
 class BaseVectorSearch:
@@ -30,7 +30,7 @@ class BaseVectorSearch:
 
         raise NotImplementedError()
 
-    def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
+    def upsert(self, records: List[Union[Record, Tuple]]) -> UpsertResult:
         """Upsert records."""
 
         raise NotImplementedError()

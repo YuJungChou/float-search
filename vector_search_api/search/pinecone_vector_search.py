@@ -60,7 +60,7 @@ class PineconeVectorSearch(BaseVectorSearch):
         include_values: bool = False,
         include_metadata: bool = False,
         namespace: Optional[Text] = None,
-    ) -> Union[Dict, "QueryResult"]:
+    ) -> "QueryResult":
         """Query vector search."""
 
         namespace = namespace or self.namespace
@@ -81,11 +81,12 @@ class PineconeVectorSearch(BaseVectorSearch):
 
     def upsert(
         self, records: List[Union[Record, Tuple]], namespace: Optional[Text] = None
-    ) -> Union[Dict, UpsertResult]:
+    ) -> "UpsertResult":
         """Upsert records."""
 
         namespace = namespace or self.namespace
-        upsert_result = self._index.upsert(
+        result = self._index.upsert(
             [Record(*doc) for doc in records], namespace=namespace
         )
+        upsert_result = UpsertResult(**result.to_dict())
         return upsert_result

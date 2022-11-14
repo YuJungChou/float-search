@@ -5,7 +5,13 @@ import numpy as np
 from vector_search_api.config import logger
 from vector_search_api.helper.vector import distance_to_similarity
 from vector_search_api.schema import Record
-from vector_search_api.schema.result import Index, Match, Namespace, QueryResult
+from vector_search_api.schema.result import (
+    Index,
+    Match,
+    Namespace,
+    QueryResult,
+    UpsertResult,
+)
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 try:
@@ -70,7 +76,7 @@ class FaissVectorSearch(BaseVectorSearch):
         )
         return result
 
-    def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
+    def upsert(self, records: List[Union[Record, Tuple]]) -> "UpsertResult":
         """Upsert records."""
 
         update_ids: List[Text] = []
@@ -94,4 +100,5 @@ class FaissVectorSearch(BaseVectorSearch):
         self._ids = np.append(self._ids, update_ids)
         self._vectors = np.concatenate((self._vectors, update_vectors), axis=0)
 
-        return {"success": True}
+        upsert_result = UpsertResult(upserted_count=len(update_ids))
+        return upsert_result
