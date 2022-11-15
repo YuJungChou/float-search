@@ -7,6 +7,8 @@ from vector_search_api.schema import (
     QueryResult,
     Record,
     UpsertResult,
+    FetchResult,
+    FetchRecord,
 )
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 from vector_search_api.config import settings
@@ -52,6 +54,19 @@ class PineconeVectorSearch(BaseVectorSearch):
         index_stats = Index(namespaces=namespaces, **result)
         self.dims = index_stats.dimension
         return index_stats
+
+    def fetch(self, ids: Union[List[Text], Text]) -> "FetchResult":
+        """Fetch record by id."""
+
+        if isinstance(ids, List) is False:
+            ids = [ids]
+
+        result = self._index.fetch(ids).to_dict()
+
+        fetch_result = FetchResult(namespace=result["namespace"], vectors={})
+        for rec_id, rec_data in result["vectors"].items():
+            fetch_result.vectors[rec_id] = FetchRecord(**rec_data)
+        return fetch_result
 
     def query(
         self,

@@ -35,3 +35,16 @@ class Match(DataclassBase):
 class QueryResult(DataclassBase):
     matches: List[Match]
     namespace: Text
+
+
+@dataclass
+class FetchRecord(DataclassBase):
+    id: Text
+    sparseValues: Dict
+    values: List[float]
+
+
+@dataclass
+class FetchResult(DataclassBase):
+    namespace: Text
+    vectors: Dict[Text, FetchRecord]
