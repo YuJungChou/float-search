@@ -1,2 +1,2 @@
 format_all:
-	yapf -i --recursive . && black .
+	yapf -i --recursive -p -vv . && black .

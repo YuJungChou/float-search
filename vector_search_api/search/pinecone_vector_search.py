@@ -1,12 +1,14 @@
 from typing import Dict, List, Optional, Text, Tuple, Union
 
-from vector_search_api.schema import Record
-from vector_search_api.search.base_vector_search import BaseVectorSearch
-from vector_search_api.schema.result import (
+from vector_search_api.schema import (
     Index,
+    Match,
+    Namespace,
     QueryResult,
+    Record,
     UpsertResult,
 )
+from vector_search_api.search.base_vector_search import BaseVectorSearch
 from vector_search_api.config import settings
 
 
@@ -40,11 +42,15 @@ class PineconeVectorSearch(BaseVectorSearch):
             pinecone.whoami()
             self.describe()
 
-    def describe(self) -> Union[Dict, Index]:
+    def describe(self) -> "Index":
         """Describe the api status."""
 
-        index_stats = self._index.describe_index_stats()
-        self.dims = index_stats["dimension"]
+        result: Dict = self._index.describe_index_stats().to_dict()
+        namespaces = {
+            k: Namespace(**v) for k, v in result.pop("namespaces", {}).items()
+        }
+        index_stats = Index(namespaces=namespaces, **result)
+        self.dims = index_stats.dimension
         return index_stats
 
     def query(
@@ -54,27 +60,33 @@ class PineconeVectorSearch(BaseVectorSearch):
         include_values: bool = False,
         include_metadata: bool = False,
         namespace: Optional[Text] = None,
-    ) -> Union[Dict, QueryResult]:
+    ) -> "QueryResult":
         """Query vector search."""
 
         namespace = namespace or self.namespace
-        query_result = self._index.query(
+        result = self._index.query(
             vector=vector,
             top_k=top_k,
             include_values=include_values,
             include_metadata=include_metadata,
             namespace=namespace,
+        ).to_dict()
+
+        query_result = QueryResult(
+            matches=[Match(**m) for m in result["matches"]],
+            namespace=result["namespace"],
         )
 
         return query_result
 
     def upsert(
         self, records: List[Union[Record, Tuple]], namespace: Optional[Text] = None
-    ) -> Union[Dict, UpsertResult]:
+    ) -> "UpsertResult":
         """Upsert records."""
 
         namespace = namespace or self.namespace
-        upsert_result = self._index.upsert(
+        result = self._index.upsert(
             [Record(*doc) for doc in records], namespace=namespace
         )
+        upsert_result = UpsertResult(**result.to_dict())
         return upsert_result

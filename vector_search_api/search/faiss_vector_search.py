@@ -2,9 +2,16 @@ from typing import Any, Dict, List, Text, Tuple, Union
 
 import numpy as np
 
-from vector_search_api.config import logger, settings
+from vector_search_api.config import logger
 from vector_search_api.helper.vector import distance_to_similarity
-from vector_search_api.schema import Record
+from vector_search_api.schema import (
+    Index,
+    Match,
+    Namespace,
+    QueryResult,
+    Record,
+    UpsertResult,
+)
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 try:
@@ -26,7 +33,13 @@ class FaissVectorSearch(BaseVectorSearch):
     def describe(self) -> Dict:
         """Describe the records."""
 
-        return {"count": self._ids.size}
+        index_stats = Index(
+            dimension=self.dims,
+            index_fullness=0.0,
+            total_vector_count=self._ids.size,
+            namespaces={"": Namespace(vector_count=self._ids.size)},
+        )
+        return index_stats
 
     def query(
         self,
@@ -34,7 +47,7 @@ class FaissVectorSearch(BaseVectorSearch):
         top_k: int = 3,
         include_values: bool = False,
         include_metadata: bool = False,
-    ) -> Dict:
+    ) -> "QueryResult":
         """Query vector search."""
 
         vector_np = np.array([vector]).astype("float32")
@@ -42,26 +55,28 @@ class FaissVectorSearch(BaseVectorSearch):
 
         distances, top_k_idxs = self._index.search(vector_np, top_k)
 
-        result: Dict = {
-            "matches": [
-                {
-                    "id": self._ids[idx],
-                    "score": distance_to_similarity(distance),
-                    "value": (
+        result: Dict = QueryResult(
+            matches=[
+                Match(
+                    id=self._ids[idx],
+                    score=distance_to_similarity(distance),
+                    values=(
                         list(self._vectors[idx]) if include_values is True else None
                     ),
-                    "metadata": (
+                    metadata=(
                         self._metadata[self._ids[idx]]
                         if include_metadata is True
                         else None
                     ),
-                }
+                    sparseValues={},
+                )
                 for distance, idx in zip(distances[0], top_k_idxs[0])
-            ]
-        }
+            ],
+            namespace="",
+        )
         return result
 
-    def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
+    def upsert(self, records: List[Union[Record, Tuple]]) -> "UpsertResult":
         """Upsert records."""
 
         update_ids: List[Text] = []
@@ -85,4 +100,5 @@ class FaissVectorSearch(BaseVectorSearch):
         self._ids = np.append(self._ids, update_ids)
         self._vectors = np.concatenate((self._vectors, update_vectors), axis=0)
 
-        return {"success": True}
+        upsert_result = UpsertResult(upserted_count=len(update_ids))
+        return upsert_result

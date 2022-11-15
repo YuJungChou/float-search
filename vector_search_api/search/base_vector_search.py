@@ -1,6 +1,11 @@
-from typing import Dict, List, Optional, Text, Tuple, Union
+from typing import List, Optional, Text, Tuple, Union
 
-from vector_search_api.schema import Record
+from vector_search_api.schema import (
+    Index,
+    QueryResult,
+    Record,
+    UpsertResult,
+)
 
 
 class BaseVectorSearch:
@@ -13,7 +18,7 @@ class BaseVectorSearch:
         self.dims = int(dims) if dims else None
         self.kwargs = kwargs
 
-    def describe(self) -> Dict:
+    def describe(self) -> "Index":
         """Describe the api status."""
 
         raise NotImplementedError()
@@ -24,12 +29,12 @@ class BaseVectorSearch:
         top_k: int = 3,
         include_values: bool = False,
         include_metadata: bool = False,
-    ) -> Dict:
+    ) -> "QueryResult":
         """Query vector search."""
 
         raise NotImplementedError()
 
-    def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
+    def upsert(self, records: List[Union[Record, Tuple]]) -> UpsertResult:
         """Upsert records."""
 
         raise NotImplementedError()

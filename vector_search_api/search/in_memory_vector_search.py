@@ -3,7 +3,14 @@ from typing import Any, Dict, List, Text, Tuple, Union
 import numpy as np
 
 from vector_search_api.helper.vector import cosine_similarity
-from vector_search_api.schema import Record
+from vector_search_api.schema import (
+    Index,
+    Match,
+    Namespace,
+    QueryResult,
+    Record,
+    UpsertResult,
+)
 from vector_search_api.search.base_vector_search import BaseVectorSearch
 
 
@@ -17,10 +24,16 @@ class InMemoryVectorSearch(BaseVectorSearch):
         self._ids = np.array([])
         self._vectors = np.empty((0, self.dims))
 
-    def describe(self) -> Dict:
+    def describe(self) -> "Index":
         """Describe the records."""
 
-        return {"count": self._ids.size}
+        index_stats = Index(
+            dimension=self.dims,
+            index_fullness=0.0,
+            total_vector_count=self._ids.size,
+            namespaces={"": Namespace(vector_count=self._ids.size)},
+        )
+        return index_stats
 
     def query(
         self,
@@ -28,7 +41,7 @@ class InMemoryVectorSearch(BaseVectorSearch):
         top_k: int = 3,
         include_values: bool = False,
         include_metadata: bool = False,
-    ) -> Dict:
+    ) -> "QueryResult":
         """Query vector search.
 
         Parameters
@@ -54,26 +67,28 @@ class InMemoryVectorSearch(BaseVectorSearch):
         cos_sim = cosine_similarity(np.array(vector), targets=self._vectors)
         top_k_idxs = np.argsort(cos_sim)[-top_k:][::-1]
 
-        result: Dict = {
-            "matches": [
-                {
-                    "id": self._ids[idx],
-                    "score": cos_sim[idx],
-                    "value": (
+        result: Dict = QueryResult(
+            matches=[
+                Match(
+                    id=self._ids[idx],
+                    score=cos_sim[idx],
+                    values=(
                         list(self._vectors[idx]) if include_values is True else None
                     ),
-                    "metadata": (
+                    metadata=(
                         self._metadata[self._ids[idx]]
                         if include_metadata is True
                         else None
                     ),
-                }
+                    sparseValues={},
+                )
                 for idx in top_k_idxs
-            ]
-        }
+            ],
+            namespace="",
+        )
         return result
 
-    def upsert(self, records: List[Union[Record, Tuple]]) -> Dict:
+    def upsert(self, records: List[Union[Record, Tuple]]) -> "UpsertResult":
         """Upsert records."""
 
         update_ids = []
@@ -95,4 +110,5 @@ class InMemoryVectorSearch(BaseVectorSearch):
         self._ids = np.append(self._ids, update_ids)
         self._vectors = np.concatenate((self._vectors, update_vectors), axis=0)
 
-        return {"success": True}
+        upsert_result = UpsertResult(upserted_count=len(update_ids))
+        return upsert_result

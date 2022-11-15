@@ -1,12 +1,15 @@
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Text
 
 from vector_search_api.schema.base import DataclassBase
 
 
+@dataclass
 class Namespace(DataclassBase):
     vector_count: int
 
 
+@dataclass
 class Index(DataclassBase):
     dimension: int
     index_fullness: float
@@ -14,10 +17,12 @@ class Index(DataclassBase):
     total_vector_count: int
 
 
+@dataclass
 class UpsertResult(DataclassBase):
     upserted_count: int
 
 
+@dataclass
 class Match(DataclassBase):
     id: Text
     score: float
@@ -26,6 +31,7 @@ class Match(DataclassBase):
     metadata: Optional[Dict] = None
 
 
+@dataclass
 class QueryResult(DataclassBase):
     matches: List[Match]
     namespace: Text
