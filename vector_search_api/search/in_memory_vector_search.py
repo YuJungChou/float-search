@@ -4,6 +4,8 @@ import numpy as np
 
 from vector_search_api.helper.vector import cosine_similarity
 from vector_search_api.schema import (
+    FetchRecord,
+    FetchResult,
     Index,
     Match,
     Namespace,
@@ -34,6 +36,31 @@ class InMemoryVectorSearch(BaseVectorSearch):
             namespaces={"": Namespace(vector_count=self._ids.size)},
         )
         return index_stats
+
+    def fetch(self, ids: Union[List[Text], Text]) -> "FetchResult":
+        """Fetch record by id."""
+
+        fetch_result = FetchResult(namespace="", vectors={})
+
+        if not ids:
+            return fetch_result
+
+        if isinstance(ids, List) is False:
+            ids = [ids]
+
+        for id in ids:
+            idx = np.where(self._ids == id)
+
+            if len(idx) == 0:
+                raise ValueError(f"ID '{id}' is not found.")
+
+            fetch_result.vectors[self._ids[idx][0]] = FetchRecord(
+                id=self._ids[idx][0],
+                sparseValues={},
+                values=self._vectors[idx].tolist(),
+            )
+
+        return fetch_result
 
     def query(
         self,

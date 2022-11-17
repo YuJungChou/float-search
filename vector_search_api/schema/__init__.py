@@ -1,5 +1,7 @@
 from vector_search_api.schema.base import Record
 from vector_search_api.schema.result import (
+    FetchRecord,
+    FetchResult,
     Index,
     Match,
     Namespace,
@@ -9,6 +11,8 @@ from vector_search_api.schema.result import (
 
 
 __all__ = [
+    "FetchRecord",
+    "FetchResult",
     "Index",
     "Match",
     "Namespace",

@@ -20,9 +20,9 @@ def test_api_upsert():
     result = vs_api.upsert(
         [
             ("1", random_array(dims=dims), {"data": "ggwp"}),
-            ("1", random_array(dims=dims), {"nested": {"data": "ggwp"}}),
-            ("2", random_array(dims=dims), None),
-            ("3", random_array(dims=dims)),
+            ("2", random_array(dims=dims), {"nested": {"data": "ggwp"}}),
+            ("3", random_array(dims=dims), None),
+            ("4", random_array(dims=dims)),
         ]
     )
     assert result
@@ -32,4 +32,9 @@ def test_api_query():
     result = vs_api.query(
         random_array(dims=dims), include_values=True, include_metadata=True
     )
+    assert result
+
+
+def test_api_fetch():
+    result = vs_api.fetch(ids=["1", "3"])
     assert result

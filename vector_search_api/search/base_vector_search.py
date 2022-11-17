@@ -1,6 +1,7 @@
 from typing import List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import (
+    FetchResult,
     Index,
     QueryResult,
     Record,
@@ -20,6 +21,11 @@ class BaseVectorSearch:
 
     def describe(self) -> "Index":
         """Describe the api status."""
+
+        raise NotImplementedError()
+
+    def fetch(self, ids: Union[List[Text], Text]) -> "FetchResult":
+        """Fetch record by id."""
 
         raise NotImplementedError()
 
