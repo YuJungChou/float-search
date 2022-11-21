@@ -1,4 +1,4 @@
-from typing import List, Optional, Text, Tuple, Union
+from typing import Any, Dict, List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import (
     FetchResult,
@@ -42,5 +42,15 @@ class BaseVectorSearch:
 
     def upsert(self, records: List[Union[Record, Tuple]]) -> UpsertResult:
         """Upsert records."""
+
+        raise NotImplementedError()
+
+    def update(
+        self,
+        id: Text,
+        values: Optional[List[float]] = None,
+        set_metadata: Optional[Dict[Text, Any]] = None,
+    ) -> None:
+        """Update the vector or metadata by ID."""
 
         raise NotImplementedError()
