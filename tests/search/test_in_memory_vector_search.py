@@ -38,3 +38,10 @@ def test_api_query():
 def test_api_fetch():
     result = vs_api.fetch(ids=["1", "3"])
     assert result
+
+
+def test_api_update():
+    vs_api.update(id="1", set_metadata={"update_test": True})
+    fetch_result = vs_api.fetch(ids=["1"])
+    assert fetch_result.vectors["1"].metadata
+    assert fetch_result.vectors["1"].metadata["update_test"] is True

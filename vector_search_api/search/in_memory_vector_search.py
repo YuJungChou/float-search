@@ -1,7 +1,8 @@
-from typing import Any, Dict, List, Text, Tuple, Union
+from typing import Any, Dict, List, Optional, Text, Tuple, Union
 
 import numpy as np
 
+from vector_search_api.exceptions.search import RecordNotExistsError
 from vector_search_api.helper.vector import cosine_similarity
 from vector_search_api.schema import (
     FetchRecord,
@@ -52,12 +53,13 @@ class InMemoryVectorSearch(BaseVectorSearch):
             idx = np.where(self._ids == id)
 
             if len(idx) == 0:
-                raise ValueError(f"ID '{id}' is not found.")
+                raise RecordNotExistsError(f"ID '{id}' is not found.")
 
             fetch_result.vectors[self._ids[idx][0]] = FetchRecord(
                 id=self._ids[idx][0],
                 sparseValues={},
                 values=self._vectors[idx].tolist(),
+                metadata=self._metadata[id] or {},
             )
 
         return fetch_result
@@ -139,3 +141,28 @@ class InMemoryVectorSearch(BaseVectorSearch):
 
         upsert_result = UpsertResult(upserted_count=len(update_ids))
         return upsert_result
+
+    def update(
+        self,
+        id: Text,
+        values: Optional[List[float]] = None,
+        set_metadata: Optional[Dict[Text, Any]] = None,
+    ) -> None:
+        """Update the vector or metadata by ID."""
+
+        if id not in self._ids:
+            raise RecordNotExistsError
+
+        idx = np.where(self._ids == id)
+
+        if len(idx) == 0:
+            raise RecordNotExistsError(f"ID '{id}' is not found.")
+
+        if values is not None:
+            self._vectors[idx] = values
+
+        if set_metadata is not None:
+            self._metadata[id] = self._metadata[id] or {}
+            self._metadata[id].update(**set_metadata)
+
+        return None
