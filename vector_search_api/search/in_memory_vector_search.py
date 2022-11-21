@@ -150,16 +150,13 @@ class InMemoryVectorSearch(BaseVectorSearch):
     ) -> None:
         """Update the vector or metadata by ID."""
 
-        if id not in self._ids:
-            raise RecordNotExistsError
-
         idx = np.where(self._ids == id)
 
         if len(idx) == 0:
             raise RecordNotExistsError(f"ID '{id}' is not found.")
 
         if values is not None:
-            self._vectors[idx] = values
+            self._vectors[idx] = np.array(values)
 
         if set_metadata is not None:
             self._metadata[id] = self._metadata[id] or {}
