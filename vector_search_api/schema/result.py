@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Text
+from typing import Any, Dict, List, Optional, Text
 
 from vector_search_api.schema.base import DataclassBase
 
@@ -42,6 +42,7 @@ class FetchRecord(DataclassBase):
     id: Text
     sparseValues: Dict
     values: List[float]
+    metadata: Optional[Dict[Text, Any]] = None
 
 
 @dataclass
