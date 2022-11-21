@@ -24,6 +24,7 @@ except Exception:
     )  # TODO: Return type
     vs_api.fetch = MagicMock(return_value={"matches": []})  # TODO: Return type
     vs_api.query = MagicMock(return_value={"matches": []})  # TODO: Return type
+    vs_api.update = MagicMock(return_value=None)  # TODO: Return type
 
 
 def test_api_describe():
@@ -51,3 +52,10 @@ def test_api_query():
         random_array(dims=dims), include_values=True, include_metadata=True
     )
     assert result
+
+
+def test_api_update():
+    result = vs_api.update(
+        id="1", values=random_array(dims=dims), set_metadata={"update_test": "YES"}
+    )
+    assert result is None

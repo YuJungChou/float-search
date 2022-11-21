@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Text, Tuple, Union
+from typing import Any, Dict, List, Optional, Text, Tuple, Union
 
 from vector_search_api.schema import (
     Index,
@@ -105,3 +105,20 @@ class PineconeVectorSearch(BaseVectorSearch):
         )
         upsert_result = UpsertResult(**result.to_dict())
         return upsert_result
+
+    def update(
+        self,
+        id: Text,
+        values: Optional[List[float]] = None,
+        set_metadata: Optional[Dict[Text, Any]] = None,
+    ) -> None:
+        """Update the vector or metadata by ID."""
+
+        params = {}
+        if values is not None:
+            params["values"] = values
+        if set_metadata is not None:
+            params["set_metadata"] = set_metadata
+        self._index.update(id=id, **params)
+
+        return None

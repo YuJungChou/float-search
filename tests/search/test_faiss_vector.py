@@ -38,3 +38,15 @@ def test_api_query():
 def test_api_fetch():
     result = vs_api.fetch(ids=["1", "3"])
     assert result
+
+
+def test_api_update():
+    new_vector = random_array(dims=dims)
+    vs_api.update(id="1", values=new_vector, set_metadata={"update_test": True})
+    fetch_result = vs_api.fetch(ids=["1"])
+    logger.error(fetch_result.vectors["1"].values)
+    assert [round(f, 3) for f in fetch_result.vectors["1"].values] == [
+        round(f, 3) for f in new_vector.tolist()
+    ]
+    assert fetch_result.vectors["1"].metadata
+    assert fetch_result.vectors["1"].metadata["update_test"] is True
