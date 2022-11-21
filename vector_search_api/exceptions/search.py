@@ -4,3 +4,7 @@ class EmptyVectorError(Exception):
 
 class RecordNotExistsError(Exception):
     pass
+
+
+class RecordAlreadyExistsError(Exception):
+    pass
