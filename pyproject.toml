@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vector-search-api"
-version = "0.4.1"
+version = "0.4.2"
 description = "Vector-Search API of databases."
 authors = ["AllenChou <f1470891079@gmail.com>"]
 license = "MIT"
