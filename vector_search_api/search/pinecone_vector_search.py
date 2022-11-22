@@ -122,3 +122,24 @@ class PineconeVectorSearch(BaseVectorSearch):
         self._index.update(id=id, **params)
 
         return None
+
+    def delete(self, ids: List[Text], namespace: Optional[Text] = None) -> None:
+        """Delete records by IDs."""
+
+        if isinstance(ids, List) is False:
+            ids = [ids]
+
+        namespace = namespace or self.namespace
+
+        self._index.delete(ids=ids, namespace=namespace)
+
+        return None
+
+    def delete_all(self, namespace: Optional[Text] = None) -> None:
+        """Delete all records"""
+
+        namespace = namespace or self.namespace
+
+        self._index.delete(delete_all=True, namespace=namespace)
+
+        return None

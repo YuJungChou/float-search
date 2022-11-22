@@ -54,3 +54,13 @@ class BaseVectorSearch:
         """Update the vector or metadata by ID."""
 
         raise NotImplementedError()
+
+    def delete(self, ids: List[Text]) -> None:
+        """Delete records by IDs."""
+
+        raise NotImplementedError()
+
+    def delete_all(self) -> None:
+        """Delete all records"""
+
+        raise NotImplementedError()

@@ -25,6 +25,8 @@ except Exception:
     vs_api.fetch = MagicMock(return_value={"matches": []})  # TODO: Return type
     vs_api.query = MagicMock(return_value={"matches": []})  # TODO: Return type
     vs_api.update = MagicMock(return_value=None)  # TODO: Return type
+    vs_api.delete = MagicMock(return_value=None)  # TODO: Return type
+    vs_api.delete_all = MagicMock(return_value=None)  # TODO: Return type
 
 
 def test_api_describe():
@@ -58,4 +60,14 @@ def test_api_update():
     result = vs_api.update(
         id="1", values=random_array(dims=dims), set_metadata={"update_test": "YES"}
     )
+    assert result is None
+
+
+def test_api_delete():
+    result = vs_api.delete(ids=["1"])
+    assert result is None
+
+
+def test_api_delete_all():
+    result = vs_api.delete_all()
     assert result is None
